@@ -2,14 +2,12 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-import javafx.event.ActionEvent;
-
 public class hoje {
     
     public static void main(String[] args) {
       
         JFrame frame = new JFrame(" ☀️ .*.*.* CLIMA HOJE .*.*.* ☁️");
-        frame.setSize(400, 200);
+        frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         
@@ -74,4 +72,3 @@ public class hoje {
         
     }
 }
-
