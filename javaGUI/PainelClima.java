@@ -1,11 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
+import javax.imageio.ImageIO;
 
 public class PainelClima {
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(PainelClima::criarJanela);
     }
@@ -16,57 +20,117 @@ public class PainelClima {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
-        JPanel painelPrincipal = new JPanel();
+        JPanel painelPrincipal = new JPanel() {
+            BufferedImage background;
+            {
+                try {
+                    background = ImageIO.read(new File("clima_background.png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (background != null) {
+                    g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+
         painelPrincipal.setLayout(null);
-        painelPrincipal.setBackground(new Color(229, 233, 240));
 
         JLabel labelDia = new JLabel("04", SwingConstants.CENTER);
-        labelDia.setFont(new Font("SansSerif", Font.BOLD, 40));
-        labelDia.setBounds(50, 30, 100, 50);
+        labelDia.setFont(new Font("SansSerif", Font.BOLD, 48));
+        labelDia.setBounds(70, 40, 100, 50);
 
         JLabel labelMesAno = new JLabel("AGOSTO - 2025", SwingConstants.CENTER);
         labelMesAno.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        labelMesAno.setBounds(30, 70, 140, 30);
+        labelMesAno.setBounds(50, 90, 140, 30);
 
-        JPanel blocoData = new JPanel();
-        blocoData.setLayout(null);
+        JPanel blocoData = new JPanel(null);
         blocoData.setBackground(Color.WHITE);
-        blocoData.setBounds(30, 20, 180, 100);
+        blocoData.setBounds(50, 30, 180, 100);
         blocoData.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
         blocoData.add(labelDia);
         blocoData.add(labelMesAno);
 
-        JTextField campoBusca = new JTextField("PESQUISE UM LOCAL...");
-        campoBusca.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        campoBusca.setBounds(530, 710, 300, 30);
-
         JPanel painelRodape = new JPanel(null);
-        painelRodape.setBounds(480, 650, 600, 100);
+        painelRodape.setBounds(300, 600, 600, 100);
         painelRodape.setBackground(new Color(210, 220, 240));
         painelRodape.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-        JLabel localLabel = new JLabel("SEU LOCAL - JOINVILLE, SC", SwingConstants.LEFT);
+        JLabel localLabel = new JLabel("SEU LOCAL - JOINVILLE, SC");
         localLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-        localLabel.setBounds(80, 10, 400, 20);
+        localLabel.setBounds(20, 10, 400, 20);
 
-        JLabel dataLabel = new JLabel("SEGUNDA - FEIRA, 04 DE AGOSTO DE 2025", SwingConstants.LEFT);
+        JLabel dataLabel = new JLabel("SEGUNDA-FEIRA, 04 DE AGOSTO DE 2025");
         dataLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        dataLabel.setBounds(80, 30, 400, 20);
+        dataLabel.setBounds(20, 30, 400, 20);
 
         JLabel climaLabel = new JLabel("\u26C8  21°C - 15°C", SwingConstants.RIGHT);
         climaLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        climaLabel.setBounds(450, 10, 150, 30);
+        climaLabel.setBounds(400, 10, 180, 30);
 
         painelRodape.add(localLabel);
         painelRodape.add(dataLabel);
         painelRodape.add(climaLabel);
-        painelRodape.add(campoBusca);
+
+        JTextField campoBusca = new JTextField();
+        campoBusca.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        campoBusca.setBounds(400, 720, 250, 30);
+
+        JButton botaoBusca = new JButton("Buscar");
+        botaoBusca.setBounds(660, 720, 80, 30);
+
+        JLabel resultadoLabel = new JLabel("", SwingConstants.LEFT);
+        resultadoLabel.setBounds(750, 720, 300, 30);
+        resultadoLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        resultadoLabel.setForeground(Color.BLUE);
+
+        botaoBusca.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cidade = campoBusca.getText().trim().toLowerCase();
+                if (cidade.equals("joinville")) {
+                    resultadoLabel.setText("Clima: ☀️ 25°C - 18°C");
+                } else if (cidade.equals("florianópolis")) {
+                    resultadoLabel.setText("Clima: ⛅ 22°C - 17°C");
+                } else if (cidade.equals("blumenau")) {
+                    resultadoLabel.setText("Clima: 🌧️ 20°C - 16°C");
+                    } else if (cidade.equals("campo alegre")) {
+                    resultadoLabel.setText("Clima: 🌧️ 20°C - 16°C");
+                    } else if (cidade.equals("mafra")) {
+                    resultadoLabel.setText("Clima: 🌧️ 15°C - 16°C");
+                    } else if (cidade.equals("balneário camburiú")) {
+                    resultadoLabel.setText("Clima: 🌧️ 17°C - 20°C");
+                    } else if (cidade.equals("são joaquim")) {
+                    resultadoLabel.setText("Clima: 🌧️ 0°C - 4°C");
+                } else {
+                    resultadoLabel.setText("Cidade não encontrada.");
+                }
+            }
+        });
 
         painelPrincipal.add(blocoData);
         painelPrincipal.add(painelRodape);
+        painelPrincipal.add(campoBusca);
+        painelPrincipal.add(botaoBusca);
+        painelPrincipal.add(resultadoLabel);
 
-        frame.add(painelPrincipal);
+        frame.setContentPane(painelPrincipal);
         frame.setVisible(true);
     }
-}
 
+    private static JLabel criarImagemRedimensionada(String caminho, int largura, int altura) {
+        try {
+            BufferedImage imagem = ImageIO.read(new File(caminho));
+            Image imagemRedimensionada = imagem.getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
+            return new JLabel(new ImageIcon(imagemRedimensionada));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JLabel("Imagem não encontrada: " + caminho);
+        }
+    }
+}
